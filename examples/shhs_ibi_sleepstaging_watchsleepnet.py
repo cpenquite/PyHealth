@@ -4,7 +4,7 @@ Demo script for WatchSleepNet on the SHHS dataset.
 This example demonstrates how to:
 1. Load the SHHS dataset
 2. Access patient data and wearable signal files
-3. Set the sleep staging task using SleepStagingSHHS
+3. Set the sleep staging task using SleepStagingSHHSIBI
 4. Split by patient and create DataLoaders
 5. Train and evaluate the WatchSleepNet model
 
@@ -14,9 +14,9 @@ Note: Update the `root` path below to point to your local SHHS download.
 """
 
 from pyhealth.trainer import Trainer
-from pyhealth.datasets import SHHSDataset, get_dataloader, split_by_patient
+from pyhealth.datasets import SHHSIBIDataset, get_dataloader, split_by_patient
 from pyhealth.models import WatchSleepNet
-from pyhealth.tasks import SleepStagingSHHS
+from pyhealth.tasks import SleepStagingSHHSIBI
 
 _EPOCHS = 10
 _DECAY_WEIGHT = 1e-5
@@ -24,8 +24,9 @@ _DECAY_WEIGHT = 1e-5
 if __name__ == "__main__":
 
     # Initialize SHHS dataset
-    SHHS_ROOT = "/path/to/shhs"  # Update this path to your local SHHS download
-    dataset = SHHSDataset(root=SHHS_ROOT)
+    #SHHS_ROOT = "/path/to/shhs"  # Update this path to your local SHHS download
+    SHHS_ROOT = "/Users/maxafinder/Documents/UIUC/spring-2026/cs598/project/data-download/shhs"
+    dataset = SHHSIBIDataset(root=SHHS_ROOT)
 
     print("=" * 70)
     print("Loading SHHS Dataset")
@@ -51,7 +52,7 @@ if __name__ == "__main__":
     print()
 
     # Access clinical attributes
-    event = patient.get_events(event_type="shhs_sleep")[0]
+    event = patient.get_events(event_type="shhs_ibi_sleep")[0]
     print("Clinical attributes:")
     print(f"  Visit: {event.visitnumber}")
     print(f"  Age: {event.age}")
@@ -68,7 +69,7 @@ if __name__ == "__main__":
     print("Setting Sleep Staging Task")
     print("=" * 70)
 
-    task = SleepStagingSHHS()
+    task = SleepStagingSHHSIBI()
     sample_dataset = dataset.set_task(task=task)
 
     print(f"Generated {len(sample_dataset)} samples")
@@ -107,9 +108,9 @@ if __name__ == "__main__":
     #   larger (256) - to test if it improves performance on this task
     model = WatchSleepNet(
         dataset=sample_dataset,
-        lstm_hidden_size=128
-        # lstm_hidden_size=64
-        # lstm_hidden_size=256
+        #lstm_hidden_size=128
+        lstm_hidden_size=64
+        #lstm_hidden_size=256
     )
 
     print(f"Model parameters: {sum(p.numel() for p in model.parameters()):,}")

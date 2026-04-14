@@ -1,6 +1,6 @@
 version: "1.0"
 tables:
-  shhs_sleep:
+  shhs_ibi_sleep:
     file_path: "shhs-metadata.csv"
     patient_id: "patient_id"
     timestamp: null
